@@ -5,6 +5,7 @@
 // @description  e2f enhancement suite - quality of life improvements for transcribing on e2f
 // @author       Robert Price
 // @match        https://dashboard.e2f.com/transcription/telephony/segments
+// @match        https://dashboard.e2f.com/transcription/media/segments
 // @grant        unsafeWindow
 // ==/UserScript==
 
@@ -31,7 +32,13 @@
     }
 
     function getTextArea() {
-        return document.getElementsByTagName('TEXTAREA')[0];
+        let elem = document.activeElement;
+        if (elem.type == 'textarea') {
+            return elem;
+        } else {
+            // might happen if the audio clip has focus, etc.
+            return document.getElementsByTagName('textarea')[0];
+        }
     }
 
     function insertTag(s, spaceBefore=true, spaceAfter=true) {
@@ -105,6 +112,7 @@
 
     let ctrlKeyTable = new Map();
     ctrlKeyTable.set('b', () => insertTag('[breath]'));
+    ctrlKeyTable.set('h', () => insertTag('[lipsmack]'));
     ctrlKeyTable.set('e', () => insertXMLTag('overlap'));
     ctrlKeyTable.set('i', () => insertXMLTag('initial'));
     ctrlKeyTable.set('o', () => insertXMLTag('lang:Foreign'));
@@ -128,11 +136,12 @@
     }
 
     (function addKeyDownHandler() {
-        let ta = getTextArea();
-        if (typeof ta == "undefined") {
+        // We'll add it to DIV#root, so it can help out with all textareas on the page.
+        let elem = document.getElementById("root");
+        if (typeof elem == "undefined") {
             setTimeout(addKeyDownHandler, 500);
         } else {
-            ta.addEventListener('keydown', keyDownHandler);
+            elem.addEventListener('keydown', keyDownHandler);
         }
     })();
 })();
