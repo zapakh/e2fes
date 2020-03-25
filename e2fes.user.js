@@ -36,10 +36,16 @@
 
     function insertTag(s, spaceBefore=true, spaceAfter=true) {
         // s should include the square brackets if you want them.
-        // TODO: Consider not clobbering the selection with, e.g., a [breath] tag.
         let ta = getTextArea();
         let curStart = ta.selectionStart;
         let curEnd = ta.selectionEnd;
+        let oldEnd = curEnd;
+        // Don't clobber the selection.
+        if (curEnd > curStart) {
+            // e2f convention usually puts tags before the affected word.
+            oldEnd = curEnd;
+            curEnd = curStart;
+        }
         let parts = [];
         if (!spaceBefore && curStart > 0 && ta.value.charAt(curStart - 1) == ' ') {
             curStart--;
@@ -55,7 +61,7 @@
         parts.push(s);
         parts.push(ta.value.substr(curEnd));
         setNativeValue(ta, parts.join(''));
-        let curNew = curStart + s.length;
+        let curNew = curStart + s.length + oldEnd - curEnd;
         ta.selectionStart = curNew;
         ta.selectionEnd = curNew;
     }
@@ -101,6 +107,7 @@
     ctrlKeyTable.set('b', () => insertTag('[breath]'));
     ctrlKeyTable.set('e', () => insertXMLTag('overlap'));
     ctrlKeyTable.set('i', () => insertXMLTag('initial'));
+    ctrlKeyTable.set('o', () => insertXMLTag('lang:Foreign'));
     ctrlKeyTable.set('s', () => insertTag('[noise]'));
     ctrlKeyTable.set('p', () => insertTag('[no-speech]'));
     ctrlKeyTable.set('l', () => insertTag('[laugh]'));
@@ -108,8 +115,9 @@
     ctrlKeyTable.set('q', () => insertWrapperTag('((', '))'));
     ctrlKeyTable.set('k', () => insertTag('[click]'));
     ctrlKeyTable.set('1', () => insertTag('like'));
-    ctrlKeyTable.set('w', () => insertTag(''));  // I'm trying to disable Ctrl+W from closing the tab
-      // The Ctrl+w disable doesn't work; we could try adding the confirmation alert thingy somehow.
+    ctrlKeyTable.set('2', () => insertTag('you know,'));
+    ctrlKeyTable.set('3', () => insertTag('really'));
+    ctrlKeyTable.set('w', () => insertTag(''));  // This doesn't work for me
 
     function keyDownHandler(e) {
         if (e.ctrlKey && ctrlKeyTable.has(e.key.toLowerCase())) {
@@ -127,8 +135,4 @@
             ta.addEventListener('keydown', keyDownHandler);
         }
     })();
-    /*
-    setTimeout(() => {
-        let ta = getTextArea();
-        ta.addEventListener('keydown', keyDownHandler);}, 4000);*/
 })();
