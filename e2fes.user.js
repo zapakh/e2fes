@@ -11,11 +11,7 @@
 
 'use strict';
 
-//    setTimeout(window.sayHi, 6000);
-// Your code here...
-unsafeWindow.hello = 'world!';
-
-// Workaround for React.js controlled components.
+// Workaround for React.js controlled textarea.  Simply updating ta.value doesn't work.
 // Source: https://github.com/facebook/react/issues/10135#issuecomment-314441175
 function setNativeValue(element, value) {
     const valueSetter = Object.getOwnPropertyDescriptor(element, 'value').set;
@@ -27,7 +23,7 @@ function setNativeValue(element, value) {
     } else {
         valueSetter.call(element, value);
     }
-    element.dispatchEvent(new Event('input', { bubbles: true })); // update it in React
+    element.dispatchEvent(new Event('input', { bubbles: true })); // force React to update
 }
 
 function getTextArea() {
@@ -36,6 +32,7 @@ function getTextArea() {
         return elem;
     } else {
         // might happen if the audio clip has focus, etc.
+        // FIXME: This doesn't actually seem to work when no textarea is active.
         return document.getElementsByTagName('textarea')[0];
     }
 }
@@ -77,7 +74,8 @@ function insertWrapperTag(s1, s2) {
     let curStart = ta.selectionStart;
     let curEnd = ta.selectionEnd;
     if (curStart == curEnd) {
-        // no selection; nothing to wrap!
+        // No selection means nothing to wrap!
+        // We'll use insertTag instead, which handles word spacing.
         insertTag(s1+s2);
         return
     }
@@ -134,10 +132,7 @@ function keyDownHandler(e) {
     }
 }
 
-// We'll add it to DIV#root, so it can help out with all textareas on the page.
-let elem = document.getElementById("root");
-if (typeof elem == "undefined") {
-    setTimeout(addKeyDownHandler, 500);
-} else {
-    elem.addEventListener('keydown', keyDownHandler);
-}
+// We'll listen on DIV#root, so it can help out with all textareas on the page.
+// Hopefully DIV#root is ready by the time this user script runs.
+let rootElem = document.getElementById("root");
+rootElem.addEventListener('keydown', keyDownHandler);
