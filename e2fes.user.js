@@ -8,8 +8,28 @@
 // @match        https://dashboard.e2f.com/transcription/media/segments
 // @grant        unsafeWindow
 // ==/UserScript==
-
 'use strict';
+
+// ctrlKeyTable lists what happens when you press ctrl+key.
+// You can change the hotkey bindings by changing this object.
+let ctrlKeyTable = {
+    'b': () => insertTag('[breath]'),
+    'h': () => insertTag('[lipsmack]'),
+    'e': () => insertXMLTag('overlap'),
+    'i': () => insertXMLTag('initial'),
+    'o': () => insertXMLTag('lang:Foreign'),
+    's': () => insertTag('[noise]'),
+    'p': () => insertTag('[no-speech]'),
+    'l': () => insertTag('[laugh]'),
+    'g': () => insertTag('[cough]'),
+    'q': () => insertWrapperTag('((', '))'),
+    'k': () => insertTag('[click]'),
+    '1': () => insertTag('like'),
+    '2': () => insertTag('you know,'),
+    '3': () => insertTag('really'),
+    'w': () => insertTag(''),
+}
+
 
 // Workaround for React.js controlled textarea.  Simply updating ta.value doesn't work.
 // Source: https://github.com/facebook/react/issues/10135#issuecomment-314441175
@@ -107,28 +127,12 @@ function insertXMLTag(s) {
     }
 }
 
-let ctrlKeyTable = new Map();
-ctrlKeyTable.set('b', () => insertTag('[breath]'));
-ctrlKeyTable.set('h', () => insertTag('[lipsmack]'));
-ctrlKeyTable.set('e', () => insertXMLTag('overlap'));
-ctrlKeyTable.set('i', () => insertXMLTag('initial'));
-ctrlKeyTable.set('o', () => insertXMLTag('lang:Foreign'));
-ctrlKeyTable.set('s', () => insertTag('[noise]'));
-ctrlKeyTable.set('p', () => insertTag('[no-speech]'));
-ctrlKeyTable.set('l', () => insertTag('[laugh]'));
-ctrlKeyTable.set('g', () => insertTag('[cough]'));
-ctrlKeyTable.set('q', () => insertWrapperTag('((', '))'));
-ctrlKeyTable.set('k', () => insertTag('[click]'));
-ctrlKeyTable.set('1', () => insertTag('like'));
-ctrlKeyTable.set('2', () => insertTag('you know,'));
-ctrlKeyTable.set('3', () => insertTag('really'));
-ctrlKeyTable.set('w', () => insertTag(''));  // This doesn't work for me
 
 function keyDownHandler(e) {
-    if (e.ctrlKey && ctrlKeyTable.has(e.key.toLowerCase())) {
+    if (e.ctrlKey && e.key.toLowerCase() in ctrlKeyTable) {
         e.preventDefault();
 //          e.returnValue = false;
-        ctrlKeyTable.get(e.key.toLowerCase())();
+        ctrlKeyTable[e.key.toLowerCase()]();
     }
 }
 
