@@ -36,6 +36,7 @@
 
     function insertTag(s, spaceBefore=true, spaceAfter=true) {
         // s should include the square brackets if you want them.
+        // TODO: Consider not clobbering the selection with, e.g., a [breath] tag.
         let ta = getTextArea();
         let curStart = ta.selectionStart;
         let curEnd = ta.selectionEnd;
@@ -48,7 +49,9 @@
         }
         parts.push(ta.value.substr(0, curStart));
         if (spaceBefore && curStart > 0 && parts[0].substr(-1) != ' ') s = ' ' + s;
-        if (spaceAfter && curEnd < ta.value.length && ta.value.charAt(curEnd) != ' ') s = s + ' ';
+        if (spaceAfter && (curEnd >= ta.value.length || ta.value.charAt(curEnd) != ' ')) {
+          s = s + ' ';
+        }
         parts.push(s);
         parts.push(ta.value.substr(curEnd));
         setNativeValue(ta, parts.join(''));
@@ -98,11 +101,15 @@
     ctrlKeyTable.set('b', () => insertTag('[breath]'));
     ctrlKeyTable.set('e', () => insertXMLTag('overlap'));
     ctrlKeyTable.set('i', () => insertXMLTag('initial'));
-    ctrlKeyTable.set('s', () => insertTag('[no-speech]'));
+    ctrlKeyTable.set('s', () => insertTag('[noise]'));
+    ctrlKeyTable.set('p', () => insertTag('[no-speech]'));
     ctrlKeyTable.set('l', () => insertTag('[laugh]'));
     ctrlKeyTable.set('g', () => insertTag('[cough]'));
     ctrlKeyTable.set('q', () => insertWrapperTag('((', '))'));
     ctrlKeyTable.set('k', () => insertTag('[click]'));
+    ctrlKeyTable.set('1', () => insertTag('like'));
+    ctrlKeyTable.set('w', () => insertTag(''));  // I'm trying to disable Ctrl+W from closing the tab
+      // The Ctrl+w disable doesn't work; we could try adding the confirmation alert thingy somehow.
 
     function keyDownHandler(e) {
         if (e.ctrlKey && ctrlKeyTable.has(e.key.toLowerCase())) {
