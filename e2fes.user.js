@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name         e2fes
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      1.0.0
 // @description  e2f enhancement suite - quality of life improvements for transcribing on e2f
 // @author       Robert Price
 // @match        https://dashboard.e2f.com/transcription/telephony/segments
 // @match        https://dashboard.e2f.com/transcription/media/segments
 // @grant        unsafeWindow
+// @updateURL    https://github.com/zapakh/e2fes/raw/master/e2fes.user.js
+// @downloadURL  https://github.com/zapakh/e2fes/raw/master/e2fes.user.js
 // ==/UserScript==
 'use strict';
 
@@ -18,6 +20,7 @@ let ctrlKeyTable = {
     'e': () => insertXMLTag('overlap'),
     'i': () => insertXMLTag('initial'),
     'o': () => insertXMLTag('lang:Foreign'),
+    ';': () => insertXMLTag('lang:Spanish'),
     's': () => insertTag('[noise]'),
     'p': () => insertTag('[no-speech]'),
     'l': () => insertTag('[laugh]'),
@@ -27,7 +30,6 @@ let ctrlKeyTable = {
     '1': () => insertTag('like'),
     '2': () => insertTag('you know,'),
     '3': () => insertTag('really'),
-    'w': () => insertTag(''),
 }
 
 
