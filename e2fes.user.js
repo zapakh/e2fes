@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         e2fes
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  e2f enhancement suite - quality of life improvements for transcribing on e2f
 // @author       Robert Price
 // @match        https://dashboard.e2f.com/transcription/telephony/segments
