@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         e2fes
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  e2f enhancement suite - quality of life improvements for transcribing on e2f
 // @author       Robert Price
 // @match        https://dashboard.e2f.com/transcription/telephony/segments
@@ -153,6 +153,12 @@ function addClickAndPlayHandlers() {
         let path = elem.firstChild.firstChild
         wave.addEventListener('click',
             function(e) {
+                // fetch a new copy, in case it has changed via NEXT, etc.
+                let elem = wave.parentElement.nextElementSibling.firstElementChild;
+                console.log("click and play handler:");
+                console.log(elem.firstChild.firstChild.attributes['d'].value);
+                console.log(elem.firstChild.firstChild.attributes['d'].value.length);
+                console.log(elem);
                 if (elem.firstChild.firstChild.attributes['d'].value.length < 15) {
                     // The "pause" icon has a longer path than "play"... lol.
                     elem.click();
