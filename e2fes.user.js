@@ -141,8 +141,6 @@ function keyDownHandler(e) {
 
 function addClickAndPlayHandlers() {
     let waves = document.getElementsByTagName("WAVE");
-    console.log("waves");
-    console.log(waves);
     for (let wave of waves) {
         let elem = wave.parentElement;
         if (typeof elem == "undefined" || elem.tagName != "DIV") continue;
@@ -155,10 +153,9 @@ function addClickAndPlayHandlers() {
             function(e) {
                 // fetch a new copy, in case it has changed via NEXT, etc.
                 let elem = wave.parentElement.nextElementSibling.firstElementChild;
-                console.log("click and play handler:");
-                console.log(elem.firstChild.firstChild.attributes['d'].value);
-                console.log(elem.firstChild.firstChild.attributes['d'].value.length);
-                console.log(elem);
+//              console.log("click and play handler:");
+//              console.log(elem.firstChild.firstChild.attributes['d'].value);
+//              console.log(elem);
                 if (elem.firstChild.firstChild.attributes['d'].value.length < 15) {
                     // The "pause" icon has a longer path than "play"... lol.
                     elem.click();
