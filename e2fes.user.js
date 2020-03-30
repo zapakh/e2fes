@@ -23,6 +23,7 @@ let ctrlKeyTable = {
     ';': () => insertXMLTag('lang:Spanish'),
     's': () => insertTag('[noise]'),
     'p': () => insertTag('[no-speech]'),
+    'x': () => insertTag('[no-speech]'),
     'l': () => insertTag('[laugh]'),
     'g': () => insertTag('[cough]'),
     'q': () => insertWrapperTag('((', '))'),
@@ -138,7 +139,30 @@ function keyDownHandler(e) {
     }
 }
 
+function addClickAndPlayHandlers() {
+    let waves = document.getElementsByTagName("WAVE");
+    console.log("waves");
+    console.log(waves);
+    for (let wave of waves) {
+        let elem = wave.parentElement;
+        if (typeof elem == "undefined" || elem.tagName != "DIV") continue;
+        elem = elem.nextElementSibling;
+        if (typeof elem == "undefined" || elem.tagName != "DIV") continue;
+        elem = elem.firstElementChild;
+        if (typeof elem == "undefined" || elem.tagName != "SPAN") continue;
+        wave.addEventListener('click',
+            function(e) {
+             // elem.click();
+                e.target.parentElement.nextSibling.firstChild.click();
+                return true;
+            });
+        console.log("e2fes: Click-and-play handler added");
+    }
+}
+
 // We'll listen on DIV#root, so it can help out with all textareas on the page.
 // Hopefully DIV#root is ready by the time this user script runs.
 let rootElem = document.getElementById("root");
 rootElem.addEventListener('keydown', keyDownHandler);
+// addClickAndPlayHandlers();
+setTimeout(addClickAndPlayHandlers, 5000);  // wait till they're there
