@@ -150,10 +150,13 @@ function addClickAndPlayHandlers() {
         if (typeof elem == "undefined" || elem.tagName != "DIV") continue;
         elem = elem.firstElementChild;
         if (typeof elem == "undefined" || elem.tagName != "SPAN") continue;
+        let path = elem.firstChild.firstChild
         wave.addEventListener('click',
             function(e) {
-             // elem.click();
-                e.target.parentElement.nextSibling.firstChild.click();
+                if (elem.firstChild.firstChild.attributes['d'].value.length < 15) {
+                    // The "pause" icon has a longer path than "play"... lol.
+                    elem.click();
+                }
                 return true;
             });
         console.log("e2fes: Click-and-play handler added");
